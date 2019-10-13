@@ -1,7 +1,7 @@
 $(document).ready(function(){
 
-
 const game = {
+
     friends: [
         {
             'name' : 'Chandler',
@@ -11,7 +11,7 @@ const game = {
             'power-up' : 0,
             'weapon' : 'Sarcasm',
             'weakness' : 'Truth',
-            'src' : './images/chandler.jpg'
+            'src' : './assets/images/chandler.jpg'
         },
 
         {
@@ -22,7 +22,7 @@ const game = {
             'power-up': 0,
             'weapon': 'Looks',
             'weakness': 'Sarcasm',
-            'src': './images/joey.jpg'
+            'src': './assets/images/joey.jpg'
         },
 
         {
@@ -33,7 +33,7 @@ const game = {
             'power-up': 0,
             'weapon': 'Truth',
             'weakness': 'Messiness',
-            'src': './images/monica.jpg'
+            'src': './assets/images/monica.jpg'
         },
 
         {
@@ -44,7 +44,7 @@ const game = {
             'power-up': 0,
             'weapon': 'Messiness',
             'weakness': 'Looks',
-            'src': './images/rachael.jpg'
+            'src': './assets/images/rachael.jpg'
         }
     ],
 
@@ -79,12 +79,41 @@ const game = {
 
     },
 
-    hideFriends : function(){
-        $('.friend').hide();
-    },
+    showMatchup : function(){
 
-    showFriends : function(){
-        
+        const user = `
+            <div class="col-3 card w-50 border border-primary text-center friend" 
+                    data-char="${game.player1.name}">
+                <div class="card-header">
+                    ${game.player1.name}
+                </div>
+                <img src=${game.player1.src} />
+                <div class="card-body">
+                    <p class="card-text">Attack: ${game.player1.attack}</p>
+                    <p class="card-text">HP: ${game.player1.hp}</p>
+                </div>
+            </div>
+        `
+
+        const textBoard = `
+            <div class="col-6 card w-50 border border-primary text-center text-board"></div>
+        `
+
+        const enemy = `
+            <div class="col-3 card w-50 border border-primary text-center friend enemy"
+                    data-char="${game.opponent.name}">
+                <div class="card-header">
+                    ${game.opponent.name}
+                </div>
+                <img src=${game.opponent.src} />
+                <div class="card-body">
+                    <p class="card-text">Attack: ${game.opponent.attack}</p>
+                    <p class="card-text">HP: ${game.opponent.hp}</p>
+                </div>
+            </div>
+        `
+
+        $('#chars').append(user, textBoard, enemy);
     },
 
     choosePlayer : function(nameDiv, hpDiv, chosen){
@@ -97,7 +126,7 @@ const game = {
         });
         $('#chars').empty();
         game.createFriends();
-        game.showToast(`You chose: ${chosen.name}!`);
+        game.showToast(`You chose ${chosen.name}!`);
         $(nameDiv).text(chosen.name);
         $(hpDiv).text(chosen.hp);
     },
@@ -109,7 +138,23 @@ const game = {
             const toastsOnScreen = $('.naZdrowie');
             const oldestToast = toastsOnScreen[0];
             $(oldestToast).remove();
-        }, 2 * 1000);
+        }, 5 * 1000);
+    },
+
+    attack : function(){
+        const power = game.player1.weapon;
+        const weakness = game.opponent.weakness;
+
+        if(power === weakness){
+            game.player1.hp -= game.opponent.attack;
+            game.opponent.hp -= (game.player1.attack + 10);
+
+        } else {
+            game.player1.hp -= game.opponent.attack;
+            game.opponent.hp -= game.player1.attack;
+        }
+        console.log(game.player1.hp);
+        console.log(game.opponent.hp);
     },
 }
 
@@ -136,16 +181,15 @@ $(document).on('click', '.friend', function(){
                 game.choosePlayer('#opponent-name', '#opponent-hp', game.opponent);
                 game.showToast(`Let's Battle!`);
                 $('#chars').empty();
-
+                game.showMatchup();
             }
         });
-        console.log(game.player1, game.opponent);
-
-
         
-    } else {
-        console.log('players chosen');
     }
+});
+
+$(document).on('click', '.enemy', function () {
+    game.attack();
 });
 
 game.start();
