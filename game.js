@@ -37,14 +37,14 @@ const game = {
         },
 
         {
-            'name': 'Jennifer Aniston',
+            'name': 'Rachael',
             'hp': 100,
             'attack': 5,
             'counter': 15,
             'power-up': 0,
             'weapon': 'Messiness',
             'weakness': 'Looks',
-            'src': './images/jenn.jpg'
+            'src': './images/rachael.jpg'
         }
     ],
 
@@ -63,7 +63,7 @@ const game = {
 
         game.availableFriends.forEach(function(friend) {
             const newFriend = `
-                <div class="col-3 card w-50 border border-primary text-center friend" data-char=${friend.name}>
+                <div class="col-3 card w-50 border border-primary text-center friend" data-char="${friend.name}">
                     <div class="card-header">
                         ${friend.name}
                     </div>
@@ -139,6 +139,8 @@ $(document).on('click', '.friend', function(){
 
             }
         });
+        console.log(game.player1, game.opponent);
+
 
         
     } else {
